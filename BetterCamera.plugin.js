@@ -87,6 +87,7 @@ module.exports = !global.ZeresPluginLibrary ? class {
         }
 
         onStop() {
+            DiscordNative.nativeModules.requireModule("discord_utils").inputEventUnregister(6666);
         }
 
         getSettingsPanel() {
@@ -130,10 +131,27 @@ module.exports = !global.ZeresPluginLibrary ? class {
 
         _addKeyBindListener() {
 
-            const shortcut = [];
-
-            const mapping = this._getKeyMappings();
             const keyBind = this._getKeyBind();
+            const shortcut = this._getKeysArray(keyBind);
+
+            DiscordNative.nativeModules.requireModule("discord_utils").inputEventUnregister(6666);
+            DiscordNative.nativeModules.requireModule("discord_utils").inputEventRegister(
+                6666,
+                shortcut,
+                isDown => this._toggleWebcam(),
+                {
+                    blurred: true,
+                    focused: true,
+                    keydown: true,
+                    keyup: false
+                }
+            );
+        }
+
+        _getKeysArray(keyBind) {
+            const shortcut = [];
+            const mapping = this._getKeyMappings();
+
             for (let i = 0; i < keyBind.length; i++) {
                 const currentShortCut = keyBind[i];
                 const letter = String.fromCharCode(currentShortCut['keyCode']);
@@ -160,18 +178,7 @@ module.exports = !global.ZeresPluginLibrary ? class {
                 shortcut.push([0, mapping['ctrl']]);
             }
 
-            DiscordNative.nativeModules.requireModule("discord_utils").inputEventUnregister(6666);
-            DiscordNative.nativeModules.requireModule("discord_utils").inputEventRegister(
-                6666,
-                shortcut,
-                isDown => this._toggleWebcam(),
-                {
-                    blurred: true,
-                    focused: true,
-                    keydown: true,
-                    keyup: false
-                }
-            );
+            return shortcut;
         }
 
         _toggleWebcam() {
