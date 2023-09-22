@@ -82,7 +82,9 @@ module.exports = !global.ZeresPluginLibrary ? class {
         onStart() {
             // Load Settings from Config on Startup
             Object.entries(PluginUtilities.loadData("shortcut", "settings", {})).forEach(([setting, value]) => {
-                settings[setting]["value"] = value
+                settings[setting]["value"] = value;
+                this._setKeyBind(value);
+                this._addKeyBindListener();
             });
         }
 
