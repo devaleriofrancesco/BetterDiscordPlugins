@@ -69,7 +69,7 @@ module.exports = !global.ZeresPluginLibrary ? class {
         PluginUtilities,
     } = Library;
 
-    return class HideStreamPreview extends Plugin {
+    return class BetterCamera extends Plugin {
 
         _keyBind = null;
 
@@ -109,31 +109,69 @@ module.exports = !global.ZeresPluginLibrary ? class {
             return panel.getElement();
         }
 
+        _getKeyMappings() {
+            switch (DiscordNative.process.platform) {
+                case "Windows".toLowerCase():
+                    return BdApi.Webpack.getModule(m => m.ctrl === 0xa2, {searchExports: true});
+                case "Linux".toLowerCase():
+                    return BdApi.Webpack.getModule(m => m.ctrl === 0x25, {searchExports: true});
+                case "Mac".toLowerCase():
+                    return BdApi.Webpack.getModule(m => m.ctrl === 0xe0, {searchExports: true});
+            }
+        }
+
         _getKeyBind() {
             return this._keyBind;
         }
 
         _setKeyBind(keyBind) {
-            this._keyBind = keyBind[0];
+            this._keyBind = keyBind;
         }
 
         _addKeyBindListener() {
-            document.removeEventListener('keydown', this._keyDownListener.bind(this));
-            document.addEventListener('keydown', this._keyDownListener.bind(this));
-        }
 
-        _keyDownListener(ev) {
+            const shortcut = [];
+
+            const mapping = this._getKeyMappings();
             const keyBind = this._getKeyBind();
-            const keyBindClause =
-                ev.keyCode === keyBind['keyCode'] &&
-                ev.metaKey === keyBind['metaKey'] &&
-                ev.shiftKey === keyBind['shiftKey'] &&
-                ev.altKey === keyBind['altKey'] &&
-                ev.ctrlKey === keyBind['ctrlKey'];
-
-            if (keyBindClause) {
-                this._toggleWebcam();
+            for (let i = 0; i < keyBind.length; i++) {
+                const currentShortCut = keyBind[i];
+                const letter = String.fromCharCode(currentShortCut['keyCode']);
+                shortcut.push([
+                    0, mapping[letter.toLowerCase()]
+                ]);
             }
+
+            // get first element
+            const firstElement = keyBind[0];
+            if (firstElement['metaKey']) {
+                shortcut.push([0, mapping['meta']]);
+            }
+
+            if (firstElement['shiftKey']) {
+                shortcut.push([0, mapping['shift']]);
+            }
+
+            if (firstElement['altKey']) {
+                shortcut.push([0, mapping['alt']]);
+            }
+
+            if (firstElement['ctrlKey']) {
+                shortcut.push([0, mapping['ctrl']]);
+            }
+
+            DiscordNative.nativeModules.requireModule("discord_utils").inputEventUnregister(6666);
+            DiscordNative.nativeModules.requireModule("discord_utils").inputEventRegister(
+                6666,
+                shortcut,
+                isDown => this._toggleWebcam(),
+                {
+                    blurred: true,
+                    focused: true,
+                    keydown: true,
+                    keyup: false
+                }
+            );
         }
 
         _toggleWebcam() {
@@ -142,11 +180,6 @@ module.exports = !global.ZeresPluginLibrary ? class {
                 checkWebcamVisibility.closest('button').click();
             }
         }
-
-        // Hide stream preview when the wrapper for the video tiles is targeted
-        // observer(e) {
-        //     console.log(e);
-        // }
 
     };
 
