@@ -10,13 +10,13 @@ const config = {
         "name": "BetterCamera",
         "authors": [{
             "name": "DeveloperFallito",
-            "discord_id": "154401402263699457",
+            "discord_id": "318024713115009026",
             "github_username": "devaleriofrancesco"
         }],
         "version": "0.0.1",
         "description": "Hide & show webcam based on configurable shortcut.",
         "github": "https://github.com/devaleriofrancesco",
-        "github_raw": "https://raw.githubusercontent.com/danegottwald/BetterDiscordPlugins/main/HideStreamPreview/HideStreamPreview.plugin.js"
+        "github_raw": "https://raw.githubusercontent.com/devaleriofrancesco/BetterDiscordPlugins/master/BetterCamera.plugin.js"
     },
     // "changelog": [
     //
