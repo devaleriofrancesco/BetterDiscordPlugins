@@ -93,16 +93,11 @@ module.exports = (_ => {
             }
 
             onStart() {
-                // Load Settings from Config on Startup
-                // Object.entries(PluginUtilities.loadData("shortcut", "settings", {})).forEach(([setting, value]) => {
-                //     settings[setting]["value"] = value;
-                //     this._setKeyBind(value);
-                //     this._addKeyBindListener();
-                // });
                 this.settings = BDFDB.DataUtils.load(this, 'bindings') ?? [];
                 if (!this.settings.keycombo) {
                     this.settings.keycombo = [];
                 }
+                this._addKeyBindListener();
             }
 
             onStop() {
