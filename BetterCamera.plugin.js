@@ -170,19 +170,19 @@ module.exports = (_ => {
                 const shortcut = [];
                 const mapping = this._getKeyMappings();
 
-                const specialKeys = [
-                    91, // META
-                    16, // SHIFT
-                    17, //CTRL
-                    18, // ALT LEFT
-                    225 // ALT RIGHT
-                ];
+                const specialKeys = {
+                    91: mapping['meta'], // META
+                    16: mapping['shift'], // SHIFT
+                    17: mapping['ctrl'], //CTRL
+                    18: mapping['alt'], // ALT LEFT
+                    225: mapping['right alt']
+                };
 
                 for (let i = 0; i < keyBind.length; i++) {
                     const currentShortCut = keyBind[i];
-                    if (specialKeys.includes(currentShortCut)) {
+                    if (currentShortCut in specialKeys) {
                         shortcut.push([
-                            0, currentShortCut
+                            0, specialKeys[currentShortCut]
                         ]);
                     }else {
                         const letter = String.fromCharCode(currentShortCut);
