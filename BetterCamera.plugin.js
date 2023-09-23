@@ -136,7 +136,7 @@ module.exports = (_ => {
 
             _getKeyMappings() {
                 switch (DiscordNative.process.platform) {
-                    case "Windows".toLowerCase():
+                    case "win32".toLowerCase():
                         return BdApi.Webpack.getModule(m => m.ctrl === 0xa2, {searchExports: true});
                     case "Linux".toLowerCase():
                         return BdApi.Webpack.getModule(m => m.ctrl === 0x25, {searchExports: true});
