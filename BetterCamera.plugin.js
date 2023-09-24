@@ -1,41 +1,13 @@
 /**
  * @name BetterCamera
  * @author DeveloperFallito
+ * @authorId 318024713115009026
+ * @version 0.0.2
  * @description Hide & show webcam based on configurable shortcut.
- * @version 0.0.1
+ * @source https://github.com/devaleriofrancesco/BetterDiscordPlugins
+ * @updateUrl https://raw.githubusercontent.com/devaleriofrancesco/BetterDiscordPlugins/master/BetterCamera.plugin.js
  */
 
-const config = {
-    "info": {
-        "name": "BetterCamera",
-        "authors": [{
-            "name": "DeveloperFallito",
-            "discord_id": "318024713115009026",
-            "github_username": "devaleriofrancesco"
-        }],
-        "version": "0.0.1",
-        "description": "Hide & show webcam based on configurable shortcut.",
-        "github": "https://github.com/devaleriofrancesco",
-        "github_raw": "https://raw.githubusercontent.com/devaleriofrancesco/BetterDiscordPlugins/master/BetterCamera.plugin.js"
-    },
-    // "changelog": [
-    //
-    // ],
-    "main": "BetterCamera.js"
-};
-
-var settings = {
-    "shortcut": {
-        "title": "Shortcut for toggle webcam (Hide / Show)",
-        "description": "Click record button for record shortcut",
-        "value": null
-    }
-}
-
-
-const fs = require("fs");
-const path = require("path");
-const request = require("request");
 const webcamIconButton = 'buttonIcon-2Zsrs2';
 
 module.exports = (_ => {
@@ -162,32 +134,10 @@ module.exports = (_ => {
             }
 
             _getKeysArray(keyBind) {
-                const shortcut = [];
-                const mapping = this._getKeyMappings();
-
-                const specialKeys = {
-                    91: mapping['meta'], // META
-                    16: mapping['shift'], // SHIFT
-                    17: mapping['ctrl'], //CTRL
-                    18: mapping['alt'], // ALT LEFT
-                    225: mapping['right alt']
-                };
-
-                for (let i = 0; i < keyBind.length; i++) {
-                    const currentShortCut = keyBind[i];
-                    if (currentShortCut in specialKeys) {
-                        shortcut.push([
-                            0, specialKeys[currentShortCut]
-                        ]);
-                    }else {
-                        const letter = String.fromCharCode(currentShortCut);
-                        shortcut.push([
-                            0, mapping[letter.toLowerCase()]
-                        ]);
-                    }
+                if (!keyBind.length) {
+                    return [];
                 }
-
-                return shortcut;
+                return keyBind.flat(10).filter(n => n).map(keyCode => [BDFDB.DiscordConstants.KeyboardDeviceTypes.KEYBOARD_KEY, BDFDB.LibraryModules.KeyCodeUtils.keyToCode((Object.entries(BDFDB.LibraryModules.KeyEvents.codes).find(n => n[1] == keyCode && BDFDB.LibraryModules.KeyCodeUtils.keyToCode(n[0], null)) || [])[0], null) || keyCode]);
             }
 
             _toggleWebcam() {
