@@ -141,9 +141,9 @@ module.exports = (_ => {
             }
 
             _toggleWebcam() {
-                const checkWebcamVisibility = document.querySelector(`svg[class=${webcamIconButton}]`);
+                const checkWebcamVisibility = document.querySelector('button[aria-label="Attiva la webcam"');
                 if (checkWebcamVisibility) {
-                    checkWebcamVisibility.closest('button').click();
+                    checkWebcamVisibility.click();
                 }
             }
 
