@@ -8,8 +8,6 @@
  * @updateUrl https://raw.githubusercontent.com/devaleriofrancesco/BetterDiscordPlugins/master/BetterCamera.plugin.js
  */
 
-const webcamIconButton = 'buttonIcon__80d32';
-
 module.exports = (_ => {
 
     const changeLog = {
@@ -141,9 +139,9 @@ module.exports = (_ => {
             }
 
             _toggleWebcam() {
-                const checkWebcamVisibility = document.querySelector(`svg[class=${webcamIconButton}]`);
+                const checkWebcamVisibility = document.querySelector(`div[class*="actionButtons"]`);
                 if (checkWebcamVisibility) {
-                    checkWebcamVisibility.closest('button').click();
+                    checkWebcamVisibility.firstChild.click();
                 }
             }
 
